@@ -1,0 +1,19 @@
+hosts +
+	host -
+		user: testuser
+		host: 127.0.0.1
+		password: test
+	host -
+		user: testuser2
+		host: 127.0.0.2
+	host -
+		user: testuser3
+		host: 127.0.0.3
+scripts +
+	upload -
+		name: Copiar archivos al cliente
+		orig: /home/lucas/Descargas/ej1.txt
+		dest: ~/pruebas/
+		md5: b834b0e3781508519c47354bdd240b5c
+
+

@@ -1,0 +1,326 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>502</width>
+    <height>438</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>SSH Helper</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QVBoxLayout" name="verticalLayout_4">
+    <property name="spacing">
+     <number>0</number>
+    </property>
+    <property name="leftMargin">
+     <number>0</number>
+    </property>
+    <property name="topMargin">
+     <number>0</number>
+    </property>
+    <property name="rightMargin">
+     <number>0</number>
+    </property>
+    <property name="bottomMargin">
+     <number>0</number>
+    </property>
+    <item>
+     <layout class="QVBoxLayout" name="verticalLayout_3">
+      <property name="spacing">
+       <number>0</number>
+      </property>
+      <item>
+       <widget class="QSplitter" name="splitter">
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <widget class="QWidget" name="verticalLayoutWidget">
+         <layout class="QVBoxLayout" name="verticalLayout">
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_2">
+            <item>
+             <widget class="QToolButton" name="removeScript">
+              <property name="text">
+               <string>🗑</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <spacer name="horizontalSpacer">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+            <item>
+             <widget class="QLabel" name="label_2">
+              <property name="text">
+               <string>&lt;b&gt;Scripts&lt;/b&gt;</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <spacer name="horizontalSpacer_3">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <widget class="QTreeWidget" name="scriptsTreeWidget">
+            <property name="dragDropMode">
+             <enum>QAbstractItemView::InternalMove</enum>
+            </property>
+            <property name="defaultDropAction">
+             <enum>Qt::CopyAction</enum>
+            </property>
+            <property name="selectionMode">
+             <enum>QAbstractItemView::ExtendedSelection</enum>
+            </property>
+            <column>
+             <property name="text">
+              <string>Script</string>
+             </property>
+            </column>
+           </widget>
+          </item>
+          <item>
+           <layout class="QFormLayout" name="formLayout"/>
+          </item>
+         </layout>
+        </widget>
+        <widget class="QWidget" name="verticalLayoutWidget_2">
+         <layout class="QVBoxLayout" name="verticalLayout_2">
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout">
+            <property name="sizeConstraint">
+             <enum>QLayout::SetMinimumSize</enum>
+            </property>
+            <item>
+             <widget class="QToolButton" name="removeHost">
+              <property name="text">
+               <string>🗑</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <spacer name="horizontalSpacer_2">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+            <item>
+             <widget class="QLabel" name="label">
+              <property name="text">
+               <string>&lt;b&gt;Hosts&lt;/b&gt;</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <spacer name="horizontalSpacer_4">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <widget class="QListWidget" name="hostsList">
+            <property name="dragEnabled">
+             <bool>true</bool>
+            </property>
+            <property name="dragDropMode">
+             <enum>QAbstractItemView::InternalMove</enum>
+            </property>
+            <property name="selectionMode">
+             <enum>QAbstractItemView::ExtendedSelection</enum>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </widget>
+      </item>
+     </layout>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>502</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuFile">
+    <property name="title">
+     <string>File</string>
+    </property>
+    <addaction name="actionNew"/>
+    <addaction name="actionOpen"/>
+    <addaction name="actionSave"/>
+    <addaction name="actionSave_as"/>
+    <addaction name="separator"/>
+    <addaction name="actionClose"/>
+   </widget>
+   <widget class="QMenu" name="menuScripts">
+    <property name="title">
+     <string>Scripts</string>
+    </property>
+    <addaction name="actionNew_script"/>
+    <addaction name="actionEdit_script"/>
+    <addaction name="separator"/>
+    <addaction name="actionNew_monitor"/>
+    <addaction name="actionNew_User"/>
+    <addaction name="actionCopy_file_to_client"/>
+    <addaction name="separator"/>
+   </widget>
+   <widget class="QMenu" name="menuHosts">
+    <property name="title">
+     <string>Hosts</string>
+    </property>
+    <addaction name="actionNewHost"/>
+    <addaction name="actionDelete_host"/>
+    <addaction name="actionEdit_host"/>
+    <addaction name="separator"/>
+    <addaction name="actionOpen_hosts"/>
+    <addaction name="actionSave_hosts"/>
+   </widget>
+   <widget class="QMenu" name="menuSSH">
+    <property name="title">
+     <string>SSH</string>
+    </property>
+    <addaction name="actionRun"/>
+   </widget>
+   <addaction name="menuFile"/>
+   <addaction name="menuScripts"/>
+   <addaction name="menuHosts"/>
+   <addaction name="menuSSH"/>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionNew">
+   <property name="text">
+    <string>New</string>
+   </property>
+  </action>
+  <action name="actionOpen">
+   <property name="text">
+    <string>Open</string>
+   </property>
+  </action>
+  <action name="actionSave">
+   <property name="text">
+    <string>Save</string>
+   </property>
+  </action>
+  <action name="actionSave_as">
+   <property name="text">
+    <string>Save as...</string>
+   </property>
+  </action>
+  <action name="actionClose">
+   <property name="text">
+    <string>Close</string>
+   </property>
+  </action>
+  <action name="actionNewHost">
+   <property name="text">
+    <string>New host</string>
+   </property>
+  </action>
+  <action name="actionDelete_host">
+   <property name="text">
+    <string>Delete host</string>
+   </property>
+  </action>
+  <action name="actionOpen_hosts">
+   <property name="text">
+    <string>Open hosts</string>
+   </property>
+  </action>
+  <action name="actionSave_hosts">
+   <property name="text">
+    <string>Save hosts</string>
+   </property>
+  </action>
+  <action name="actionEdit_host">
+   <property name="text">
+    <string>Edit host</string>
+   </property>
+  </action>
+  <action name="actionNew_script">
+   <property name="text">
+    <string>New script</string>
+   </property>
+  </action>
+  <action name="actionEdit_script">
+   <property name="text">
+    <string>Edit script</string>
+   </property>
+  </action>
+  <action name="actionNew_monitor">
+   <property name="text">
+    <string>New monitor</string>
+   </property>
+  </action>
+  <action name="actionNew_User">
+   <property name="text">
+    <string>New User</string>
+   </property>
+  </action>
+  <action name="actionCopy_file_to_client">
+   <property name="text">
+    <string>Copy file to client</string>
+   </property>
+  </action>
+  <action name="actionRun">
+   <property name="text">
+    <string>Save and Run</string>
+   </property>
+  </action>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

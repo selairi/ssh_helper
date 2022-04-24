@@ -1,0 +1,32 @@
+hosts +
+	host -
+		user: testuser
+		host: 127.0.0.1
+		password: test
+	host -
+		user: testuser2
+		host: 127.0.0.2
+	host -
+		user: testuser3
+		host: 127.0.0.3
+scripts +
+	monitor -
+		name: Monitor para permitir el acceso a 1 procesos
+		threads: 2
+		scripts +
+			script -
+				name: Listar archivos ocultos
+				command:
+					echo $USER fuera del monitor
+		scripts_lock +
+			script -
+				name: Identificarse
+				command:
+					echo En el monitor $USER
+			script -
+				name: Esperar
+				command:
+					sleep 5
+
+
+

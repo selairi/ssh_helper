@@ -1,0 +1,12 @@
+hosts +
+	host -
+		user: lucas
+		host: 127.0.0.1
+scripts +
+	download -
+		name: Copiar archivos del cliente
+		orig: ~/Descargas/pruebas/
+		dest: ~/Descargas/pruebas1/
+
+
+

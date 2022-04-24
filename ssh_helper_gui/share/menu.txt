@@ -1,0 +1,143 @@
+scripts +
+	script -
+		args:
+			User: user
+			command:
+				userdel -r {{User}}
+				if [[ $? -ne 0 ]] ; then
+				  echo "##log: Error: {{User}} cannot be deleted."
+				else
+				  echo "##log: OK {{User}} has been deleted."
+				fi
+			help: Remove user and user's home folder.
+		command: ls
+		sudo: yes
+		name: Delete user
+
+	script -
+		args:
+			User: user
+			Path: /home/user/path
+			command:
+				mkdir '{{Path}}' && chown {{User}} '{{Path}}' && chmod o-rwx '{{Path}}' && chmod g-rwx '{{Path}}'
+				if [[ $? -ne 0 ]] ; then
+				  echo "##log: Error: mkdir {{Path}}"
+				else
+				  echo "##log: OK New path {{Path}}"
+				fi
+			help: New folder is built and User is set as owner.
+		command: ls
+		sudo: yes
+		name: New folder 
+
+	script -
+		args:
+			Path: /home/user/path
+			command:
+				rm -Rf '{{Path}}'
+				if [[ $? -ne 0 ]] ; then
+				  echo "##log: Error: deleting {{Path}}"
+				else
+				  echo "##log: OK {{Path}} Deleted"
+				fi
+			help: Delete folder or file
+		command: ls 
+		sudo: yes
+		name: Delete folder or file
+
+	script -
+		args:
+			User: user
+			Path: /home/user/path.tar.gz
+			command:
+				tar -xzvf '{{Path}}.tar.gz' '{{Path}}' && chown {{User}} '{{Path}}.tar.gz' && chmod o-rwx '{{Path.tar.gz}}' && chmod g-rwx '{{Path.tar.gz}}'
+				if [[ $? -ne 0 ]] ; then
+				  echo "##log: Error: building tar {{Path}}"
+				else
+				  echo "##log: OK {{Path}} has been compresed"
+				fi
+			help: Untar "tar.gz" files. User is set as owner 
+		command: ls 
+		sudo: yes
+		name: Untar file
+
+	script -
+		args:
+			Package: package-name
+			command:
+				apt update
+				apt install -y '{{Package}}'
+				if [[ $? -ne 0 ]] ; then
+				  echo "##log: Error: {{Package}} cannot be installed."
+				else
+				  echo "##log: OK {{Package}} has been installed."
+				fi
+			help: <p>This script updates and install an APT package. This script runs:</p>
+				<pre>
+					apt update
+					apt install -y '{{Package}}'
+				</pre>
+				<p>Package names can be checked in <a href='https://packages.ubuntu.com/'>https://packages.ubuntu.com/</a></p>
+		command: ls 
+		sudo: yes
+		name: Install APT package
+
+	script -
+		args:
+			Package: package-name
+			command:
+				apt purge -y '{{Package}}'
+				if [[ $? -ne 0 ]] ; then
+				  echo "##log: Error: {{Package}} cannot be removed."
+				else
+				  echo "##log: OK {{Package}} has been removed."
+				fi
+			help: <p>This script removes an APT package. This script runs:</p>
+				<pre>
+					apt purge -y '{{Package}}'
+				</pre>
+				<p>Package names can be checked in <a href='https://packages.ubuntu.com/'>https://packages.ubuntu.com/</a></p>
+		command: ls 
+		sudo: yes
+		name: Remove APT package
+
+
+	script -
+		args:
+			User: user
+			Path: /home/
+			command:
+				ls '{{Path}}' && find {{Path}}/{{User}}
+				if [[ $? -ne 0 ]] ; then
+				  echo "##log: Error: testing {{Path}}"
+				else
+				  echo "##log: OK {{Path}} has been ls"
+				fi
+				sleep 10
+			help: <p>This is only a test.</p>
+				<p>This test runs:</p>
+				<pre>
+				  ls '{{Path}}' && find {{Path}}/{{User}}
+				  sleep 10
+				</pre>
+				<p>No sudo.</p>
+				<p>It can be used to test SSH connections.</p>
+		command: ls 
+		sudo: no
+		name: Test SSH connection
+
+	script -
+		args:
+			User: user
+			Path: /home/user/file.ova
+			command:
+				su '{{User}}' -c vboxmanage import '{{Path}}'
+				if [[ $? -ne 0 ]] ; then
+				  echo "##log: Error: importing {{Path}}."
+				else
+				  echo "##log: OK {{Path}} has been imported."
+				fi
+			help: Import a VirtualBox OVA to a given user.
+		command: ls 
+		sudo: yes
+		name: Import VirtualBox OVA

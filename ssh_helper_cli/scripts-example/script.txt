@@ -1,0 +1,65 @@
+hosts +
+	host -
+		user: testuser
+		host: 127.0.0.1
+		password: test
+	host -
+		user: testuser
+		host: 127.0.0.2
+	host -
+		user: testuser
+		host: 127.0.0.3
+scripts +
+	script -
+		name: Listar archivos
+		command:
+			ls -l
+			find .
+			env
+	script -
+		name: Listar archivos como sudo
+		command:
+			ls -l > ej.txt
+			scp ej.txt testuser@127.0.0.1:/home/testuser/ej2.txt
+			echo "##log: Listado de archivos"
+		sudo: yes
+		stop_on_error: yes
+	script -:
+		name: Script de GUI
+		type: Tipo (sólo soportado por la GUI)
+		command:
+			ls '/home/testuser'
+			grep -Re 'include' '/home/testuser'
+			echo "##log: Error al leer los archivos"
+		args:
+			ruta: /home/testuser
+			reg: include
+			command:
+    			ls '{ruta}'
+    			grep -Re '{reg}' '{ruta}'
+    			echo "##log: Error al leer los archivos"
+	upload -
+		name: Copiar archivos al cliente
+		orig: /home/lucas/Descargas/ej1.txt
+		dest: /home/testuser/pruebas/
+		md5: b834b0e3781508519c47354bdd240b5c
+		user: testuser
+	monitor -
+		name: Monitor para permitir el acceso a 3 procesos
+		threads: 3
+		scripts +
+			script -
+				name: Listar archivos ocultos
+				command:
+					ls -la
+		scripts_lock +
+			script -
+				name: Listar archivos
+				command:
+					ls -l
+					find .
+			script -
+				name: Listar archivos como sudo
+				command:
+					ls -l
+				sudo: yes
