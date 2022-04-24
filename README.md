@@ -16,7 +16,7 @@ In order to compile `ssh_helper`, you will need:
 
 - C++20 Compiler. Ex. g++
 - [cmake](<https://cmake.org/>) 
-- [qt5 libraries](<https://www.qt.io/>)
+- [Qt6 or Qt5 libraries](<https://www.qt.io/>)
 - [libssh](<https://www.libssh.org/>)
 - [qterminal](<https://github.com/lxqt/qterminal>)
 
