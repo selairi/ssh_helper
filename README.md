@@ -22,12 +22,12 @@ In order to compile `ssh_helper`, you will need:
 
 Then run:
 
-`
+```
 cd build
 cmake ..
 make
 sudo make install
-`
+```
 
 Ubuntu users can run `install-packages-ubuntu.sh` script to install dependencies and install `ssh_helper`.
 
@@ -46,14 +46,15 @@ Hosts menu helps you to add, remove or edit the hosts list. The hosts list can b
 You can use predefined scripts in Scripts menu or write your own scripts in "Scripts/New script" menu item. This script will be run as bash script in the hosts.
 
 When you finish, use the SSH menu to run your script. If you check the "sudo" option, the script will be run as sudo. You can add `echo "##log: "` to show log messages:
-`
+
+```
 rm -Rf 'Path'
 if [[ $? -ne 0 ]] ; then
   echo "##log: Error: deleting Path"
 else
   echo "##log: OK Path Deleted"
 fi
-`
+```
 
 You can add more items to menu script by editing the `INSTALL PATH/share/ssh_helper/menu.txt` or writing your own `menu.txt` file and running the command line:
 
@@ -61,3 +62,11 @@ You can add more items to menu script by editing the `INSTALL PATH/share/ssh_hel
 
 ### `ssh_helper_cli`. The command line tool
 
+You can write your own scripts or edit the `ssh_helper_gui` ones and run then with `ssh_helper_cli`. You must make a new folder to save the logs:
+
+```
+mkdir log
+ssh_helper_cli --log_path log script.txt
+```
+
+The syntax of scripts is really simple. You can check from `ssh_helper_gui` output. Scripts uses tabs as indent, be carefull with your text editor. Some text editors replace tabs by spaces.
