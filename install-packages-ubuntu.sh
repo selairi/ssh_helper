@@ -1,5 +1,5 @@
 # Download Ubuntu dependencies
-sudo apt install g++ cmake qt5-default qtbase5-dev-tools libssh-dev qterminal
+sudo apt install g++ cmake qtbase5-dev pkg-config qtbase5-dev-tools libssh-dev qterminal
 
 # Compiling
 cd build
