@@ -43,6 +43,7 @@ static int get_next_id()
 
 MainWindow::MainWindow(QString menuFilePath, QWidget *parent, Qt::WindowFlags flags) : QMainWindow(parent, flags)
 {
+  setWindowIcon(QIcon(ICON_PATH "/hicolor/scalable/apps/ssh_helper.svg"));
   ui.setupUi(this);
 
   loadMenuFile(SHARE_PATH "/menu.txt");
@@ -708,6 +709,15 @@ void MainWindow::onRunSSH()
   }
 }
 
+void MainWindow::about()
+{
+   QMessageBox::about(this, tr("About SSH Helper"),
+            tr("Gui to run SSH scripts on network.\n\n"
+                "Copyright (C) 2022 P.L. Lucas\n"
+                "License: GPL-3"
+            ));
+}
+
 void MainWindow::listenMenuActions()
 {
   // Hosts menu actions
@@ -737,6 +747,10 @@ void MainWindow::listenMenuActions()
   connect(ui.actionSave, &QAction::triggered, this, &MainWindow::onSave);
   connect(ui.actionSave_as, &QAction::triggered, this, &MainWindow::onSaveAs);
   connect(ui.actionOpen, &QAction::triggered, this, &MainWindow::onOpen);
+
+  // Helo menu actions
+  connect(ui.actionAbout, &QAction::triggered, this, &MainWindow::about);
+  connect(ui.actionAbout_Qt, &QAction::triggered, qApp, &QApplication::aboutQt);
 }
 
 void MainWindow::closeWindow()

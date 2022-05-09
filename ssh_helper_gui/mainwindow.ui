@@ -196,7 +196,7 @@
    </property>
    <widget class="QMenu" name="menuFile">
     <property name="title">
-     <string>File</string>
+     <string>&amp;File</string>
     </property>
     <addaction name="actionNew"/>
     <addaction name="actionOpen"/>
@@ -207,7 +207,7 @@
    </widget>
    <widget class="QMenu" name="menuScripts">
     <property name="title">
-     <string>Scripts</string>
+     <string>S&amp;cripts</string>
     </property>
     <addaction name="actionNew_script"/>
     <addaction name="actionEdit_script"/>
@@ -219,7 +219,7 @@
    </widget>
    <widget class="QMenu" name="menuHosts">
     <property name="title">
-     <string>Hosts</string>
+     <string>H&amp;osts</string>
     </property>
     <addaction name="actionNewHost"/>
     <addaction name="actionDelete_host"/>
@@ -230,39 +230,47 @@
    </widget>
    <widget class="QMenu" name="menuSSH">
     <property name="title">
-     <string>SSH</string>
+     <string>&amp;SSH</string>
     </property>
     <addaction name="actionRun"/>
+   </widget>
+   <widget class="QMenu" name="menuHelp">
+    <property name="title">
+     <string>&amp;Help</string>
+    </property>
+    <addaction name="actionAbout"/>
+    <addaction name="actionAbout_Qt"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuScripts"/>
    <addaction name="menuHosts"/>
    <addaction name="menuSSH"/>
+   <addaction name="menuHelp"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionNew">
    <property name="text">
-    <string>New</string>
+    <string>&amp;New</string>
    </property>
   </action>
   <action name="actionOpen">
    <property name="text">
-    <string>Open</string>
+    <string>&amp;Open</string>
    </property>
   </action>
   <action name="actionSave">
    <property name="text">
-    <string>Save</string>
+    <string>&amp;Save</string>
    </property>
   </action>
   <action name="actionSave_as">
    <property name="text">
-    <string>Save as...</string>
+    <string>Save &amp;as...</string>
    </property>
   </action>
   <action name="actionClose">
    <property name="text">
-    <string>Close</string>
+    <string>&amp;Close</string>
    </property>
   </action>
   <action name="actionNewHost">
@@ -318,6 +326,16 @@
   <action name="actionRun">
    <property name="text">
     <string>Save and Run</string>
+   </property>
+  </action>
+  <action name="actionAbout">
+   <property name="text">
+    <string>About</string>
+   </property>
+  </action>
+  <action name="actionAbout_Qt">
+   <property name="text">
+    <string>About Qt</string>
    </property>
   </action>
  </widget>

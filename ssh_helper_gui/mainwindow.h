@@ -41,7 +41,6 @@ class MainWindow : public QMainWindow
     void onOpen();
     void closeWindow();
 
-
     void onAddHost();
     void onDeleteHost();
     void onEditHosts();
@@ -58,6 +57,8 @@ class MainWindow : public QMainWindow
     void onCopyFileToClient();
 
     void onRunSSH();
+
+    void about();
 
   private:
     void listenMenuActions();

@@ -277,14 +277,14 @@ enum LogState {
     else
       nbytes = 0;
   }
- 
-  //if(nbytes < 0)
-  //{
-  //  ssh_channel_close(channel);
-  //  ssh_channel_free(channel);
-  //  throw(SshException(std::string("Error: Output from command '") + command + "' cannot be read. 3"));
-  //}
- 
+#if LIBSSH_VERSION_INT >= ((0) << 16 | (9) << 8 | (6)) 
+  if(nbytes < 0)
+  {
+    ssh_channel_close(channel);
+    ssh_channel_free(channel);
+    throw(SshException(std::string("Error: Output from command '") + command + "' cannot be read. 3"));
+  }
+#endif
   ssh_channel_send_eof(channel);
   ssh_channel_close(channel);
   int status = ssh_channel_get_exit_status(channel);
