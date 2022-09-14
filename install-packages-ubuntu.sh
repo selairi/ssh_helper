@@ -3,6 +3,7 @@ sudo apt install g++ cmake qtbase5-dev pkg-config qtbase5-dev-tools libssh-dev q
 
 # Compiling
 cd build
+export USE_QT5=ON
 cmake ..
 make -j4
 
