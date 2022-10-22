@@ -58,6 +58,12 @@ GuiScript::GuiScript() : ScriptGeneric()
   type = ScriptType::GUI_SCRIPT;
 }
 
+GuiScript::GuiScript(const GuiScript &script) : ScriptGeneric() , args(script.args)
+{
+  type = ScriptType::GUI_SCRIPT;
+  sudo = script.sudo;
+}
+
 std::shared_ptr<ConfigItemMap> GuiScript::getConfig()
 {
   std::shared_ptr<ConfigItemMap> map = std::make_shared<ConfigItemMap>();

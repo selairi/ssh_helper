@@ -29,6 +29,7 @@ CopyFileToClientDialog::CopyFileToClientDialog(std::shared_ptr<SCPScript> scp, Q
 {
   mThread = nullptr;
   mProgressDialog = nullptr;
+  mWaitThreadMessageDialog = nullptr;
   mStopMD5Process = false;
   ui.setupUi(this);
   mScp = scp;
@@ -51,6 +52,15 @@ std::shared_ptr<SCPScript> CopyFileToClientDialog::getSCP()
   return mScp;
 }
 
+void CopyFileToClientDialog::waitChildThread()
+{
+  if(mThread) {
+    mThread->wait();
+    disconnect(mThread, &QThread::finished, this, &CopyFileToClientDialog::onFinishMD5);
+    onFinishMD5();
+  }
+}
+
 void CopyFileToClientDialog::onSelectFile()
 {
   QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"));
@@ -58,6 +68,10 @@ void CopyFileToClientDialog::onSelectFile()
     ui.origLineEdit->setText(fileName);
     QFile file(ui.origLineEdit->text());
     if(file.exists()) {
+      if(mThread) {
+        mStopMD5Process = true;
+        waitChildThread();
+      }
       // Get md5 of file
       mStopMD5Process = false;
       if(! mProgressDialog) {
@@ -81,24 +95,41 @@ void CopyFileToClientDialog::onSelectFile()
 
 void CopyFileToClientDialog::onCancelProgress()
 {
+  if(! mWaitThreadMessageDialog) {
+    mWaitThreadMessageDialog = new QDialog(this);
+    mWaitThreadMessageDialog->setModal(true);
+    QVBoxLayout *layout = new QVBoxLayout();
+    layout->addWidget(new QLabel(tr("Please wait"), mWaitThreadMessageDialog));
+    mWaitThreadMessageDialog->setLayout(layout);
+    mWaitThreadMessageDialog->show();
+  }
   mStopMD5Process = true;
   ui.origLineEdit->setText("");
+  mThread->wait();
 }
 
 void CopyFileToClientDialog::onFinishMD5()
 {
-  delete mThread;
-  mThread = nullptr;
-  mProgressDialog->setVisible(false);
-  delete mProgressDialog;
-  mProgressDialog = nullptr;
-  ui.nameLineEdit->setText(tr("Copy file to client: ") + ui.origLineEdit->text());
+  if(mThread) {
+    ui.nameLineEdit->setText(tr("Copy file to client: ") + ui.origLineEdit->text());
+    delete mThread;
+    mThread = nullptr;
+    mProgressDialog->setVisible(false);
+    delete mProgressDialog;
+    mProgressDialog = nullptr;
+    if(mWaitThreadMessageDialog) {
+      mWaitThreadMessageDialog->setVisible(false);
+      delete mWaitThreadMessageDialog;
+      mWaitThreadMessageDialog = nullptr;
+    }
+  }
 }
 
 void CopyFileToClientDialog::onUpdateProgress(int value)
 {
-  if(mProgressDialog)
-    mProgressDialog->setValue(value);
+  if(mProgressDialog) {
+    mProgressDialog->setValue(value < 100 ? value : 99);
+  }
 }
 
 void CopyFileToClientDialog::getMD5()
@@ -121,6 +152,8 @@ void CopyFileToClientDialog::getMD5()
       if(percent > last_percent) 
         emit updateProgress(percent);
       last_percent = percent;
+      // Uncomment the next line for testing
+      //QThread::sleep(10);
     }
     md5.closeWriteChannel();
     if(md5.waitForFinished()) {

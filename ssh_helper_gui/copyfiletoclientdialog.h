@@ -39,6 +39,7 @@ class CopyFileToClientDialog : public QDialog
     void onFinishMD5();
     void onUpdateProgress(int value);
     void onCancelProgress();
+    void waitChildThread();
   
   signals:
     void updateProgress(int value);
@@ -48,6 +49,7 @@ class CopyFileToClientDialog : public QDialog
     std::shared_ptr<SCPScript> mScp;
     QThread *mThread;
     QProgressDialog *mProgressDialog;
+    QDialog *mWaitThreadMessageDialog;
     bool mStopMD5Process;
     
 };

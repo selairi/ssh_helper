@@ -131,7 +131,7 @@ scripts +
 			User: user
 			Path: /home/user/file.ova
 			command:
-				su '{{User}}' -c vboxmanage import '{{Path}}'
+				su '{{User}}' -c "vboxmanage import '{{Path}}'"
 				if [[ $? -ne 0 ]] ; then
 				  echo "##log: Error: importing {{Path}}."
 				else

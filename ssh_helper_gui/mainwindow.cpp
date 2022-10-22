@@ -251,6 +251,7 @@ void MainWindow::onEditScript()
         if(QDialog::Accepted == dialog.exec()) {
           scripts[n] = dialog.getSCP();
         }
+        dialog.waitChildThread();
       }
       selected->setText(0, script_generic->name);
     }
@@ -653,11 +654,13 @@ void MainWindow::loadMenuFile(QString path)
                   // Insert new item in menu
                   QAction *action = ui.menuScripts->addAction(script->name);
                   connect(action, &QAction::triggered, [=, this]() {
-                      GuiScriptDialog dialog(script, script->name, this);
+                      GuiScriptDialog dialog(
+                          std::make_shared<GuiScript>(*script.get()), 
+                          script->name, this
+                      );
                       dialog.setWindowTitle(script->name);
                       if(QDialog::Accepted == dialog.exec()) {
-                        std::shared_ptr<GuiScript> script = dialog.getGuiScript();
-                        insertTreeItem(script);
+                        insertTreeItem(dialog.getGuiScript());
                       }
                   });
                 }

@@ -71,6 +71,7 @@ class Monitor : public ScriptGeneric {
 class GuiScript : public ScriptGeneric {
   public:
     GuiScript();
+    GuiScript(const GuiScript &script);
     ~GuiScript() = default;
 
     bool sudo;
