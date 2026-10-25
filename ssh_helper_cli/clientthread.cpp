@@ -274,8 +274,8 @@ void ClientThread::run(std::shared_ptr<ConfigItemVector> scripts)
             std::string sudo = ConfigFileParser::getMapValue(map, "sudo");
             if(!sudo.empty()) {
               std::cout << "sudo " << command->getValue() << std::endl;
-              std::string sudo_script_path =shared_folder + "/sudo_script.sh"; 
-              ssh->ssh_write_to_file(command->getValue(), sudo_script_path);
+              std::string sudo_script_path = shared_folder + "/sudo_script.sh"; 
+              ssh->ssh_write_contents_to_host_file(command->getValue(), sudo_script_path);
               std::tie(rc, log) = ssh->exec_sudo("bash '" + sudo_script_path + "'");
             } else {
               std::cout << "$ " << command->getValue() << std::endl;
@@ -347,7 +347,7 @@ void ClientThread::run(std::shared_ptr<ConfigItemVector> scripts)
               }
               std::cout << user << "@" << host << " uploading file " << orig << " to " << shared_folder + "/" + dest_path << std::endl;
               try {
-                ssh->scp_write(orig, shared_folder + "/" + dest_path);
+                ssh->ssh_copy_local_to_host_file(orig, shared_folder + "/" + dest_path);
                 // File uploaded to shared folder. Add as seed
                 P2PSeed seed = std::make_shared<_P2PSeed>();
                 seed->user = user;

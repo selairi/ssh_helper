@@ -78,11 +78,15 @@ class SshPtr {
     /** Run remote command as sudo and get output. if status == -1, user is not a sudoer.*/
     [[nodiscard]] std::tuple<int /*status*/, std::shared_ptr<char*> /*output*/, std::string /*log*/> 
       exec_sudo_get_output(std::string command);// throw(SshException);
+    /** Copy local file in "filepath" path to "dest" path in remote host.*/
+    void ssh_copy_local_to_host_file(std::string filepath, std::string dest);// throw(SshException);
+    void ssh_write_contents_to_host_file(std::string content, std::string dest);// throw(SshException);
+    
+  private:
+#if LIBSSH_VERSION_INT < ((0) << 16 | (10) << 8 | (0)) // Version 0.10.0 deprecates scp
     void scp_write(std::string filepath, std::string dest);// throw(SshException);
     void ssh_write_to_file(std::string content, std::string dest);// throw(SshException);
-
-
-  private:
+#endif
     [[nodiscard]] std::tuple<int /*status*/, std::shared_ptr<char*> /*output*/, std::string /*log*/> exec_sudo_get_output(std::string command, bool sudo, bool output_to_stdout, std::string stdin_string = "");
 
     ssh_session session;

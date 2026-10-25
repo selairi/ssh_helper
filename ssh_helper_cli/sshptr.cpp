@@ -18,11 +18,13 @@
 
 #include "sshptr.h"
 #include "string_utils.h"
+#include <libssh/sftp.h>
 #include <errno.h>
 #include <string.h>
 #include <filesystem>
 #include <sys/stat.h>
 #include <iostream>
+#include <fcntl.h>
 
 SshException::SshException(std::string error)
 {
@@ -357,7 +359,7 @@ enum LogState {
 }
 
 
-
+#if LIBSSH_VERSION_INT < ((0) << 16 | (10) << 8 | (0)) // Version 0.10.0 deprecates scp
 void SshPtr::scp_write(std::string filepath, std::string dest)
 {
   // Check file size
@@ -419,7 +421,9 @@ void SshPtr::scp_write(std::string filepath, std::string dest)
   ssh_scp_close(scp);
   ssh_scp_free(scp);
 }
+#endif
 
+#if LIBSSH_VERSION_INT < ((0) << 16 | (10) << 8 | (0)) // Version 0.10.0 deprecates scp
 void SshPtr::ssh_write_to_file(std::string content, std::string dest) // throw(SshException);
 {
   std::error_code error;
@@ -459,4 +463,125 @@ void SshPtr::ssh_write_to_file(std::string content, std::string dest) // throw(S
 
   ssh_scp_close(scp);
   ssh_scp_free(scp);
+}
+#endif
+
+void SshPtr::ssh_copy_local_to_host_file(std::string filepath, std::string dest)
+{
+#if LIBSSH_VERSION_INT >= ((0) << 16 | (10) << 8 | (0)) // Version 0.10.0 deprecates scp
+  // Check file size
+  std::filesystem::path path(filepath);
+  if(! std::filesystem::exists(path)) {
+    throw(SshException("[SshPtr::ssh_copy_local_to_host_file]: File " + filepath + " does not exists."));
+  }
+
+  std::error_code error;
+  uintmax_t file_length = std::filesystem::file_size(path, error);
+  if(error) {
+    throw(SshException("[SshPtr::ssh_copy_local_to_host_file]: " + filepath + ":" + error.message()));
+  }
+
+  std::filesystem::path destPath(dest);
+  // Make remote directory with path
+  int rc;
+  std::string log;
+  std::tie(rc, log) = exec("mkdir -p '" + destPath.parent_path().string() + "'");
+  if(rc != 0 && rc != 1) {
+    throw(SshException("[SshPtr::ssh_copy_local_to_host_file]: Error making remote path: " + destPath.parent_path().string())); 
+  }
+
+  // Open sftp session
+  sftp_session sftp; 
+  sftp = sftp_new(session);
+  if (sftp == NULL) {
+    throw(SshException("[SshPtr::ssh_copy_local_to_host_file]: Error allocating SFTP session: " + dest + std::string(":") + ssh_get_error(session)));
+  }
+ 
+  rc = sftp_init(sftp);
+  if (rc != SSH_OK) {
+    throw(SshException("[SshPtr::ssh_copy_local_to_host_file]: Error initializing SFTP session: " + dest + std::string(":") + std::to_string(sftp_get_error(sftp))));
+    sftp_free(sftp);
+  }
+  
+  // Open sftp file to write
+  int access_type = O_WRONLY | O_CREAT | O_TRUNC;
+  sftp_file file;
+  file = sftp_open(sftp, destPath.string().c_str(), access_type, S_IRWXU);
+  if (file == NULL) {
+    throw(SshException("[SshPtr::ssh_copy_local_to_host_file]: Can't open file for writing: " + filepath + std::string(":") + ssh_get_error(session)));
+  }
+ 
+  char buffer[4096];
+  FILE *in = fopen(filepath.c_str(), "r");
+  if(in == nullptr) {
+    throw(SshException("[SshPtr::ssh_copy_local_to_host_file]: Cannot open local file: " + filepath));
+  }
+
+  size_t nbytes = fread(buffer, sizeof(char), sizeof(buffer), in);
+  while(nbytes > 0) {
+    rc = sftp_write(file, buffer, nbytes);
+    if (rc != nbytes) {
+      sftp_close(file);
+      sftp_free(sftp);
+      fclose(in);
+      throw(SshException("[SshPtr::ssh_copy_local_to_host_file]: Cannot write to remote file: " + dest + std::string(":") + ssh_get_error(session)));
+    }
+    nbytes = fread(buffer, sizeof(char), sizeof(buffer), in);
+  }
+
+  fclose(in);
+  sftp_close(file);
+  sftp_free(sftp);
+#else
+  scp_write(filepath, dest);
+#endif
+}
+
+
+void SshPtr::ssh_write_contents_to_host_file(std::string content, std::string dest)
+{
+#if LIBSSH_VERSION_INT >= ((0) << 16 | (10) << 8 | (0)) // Version 0.10.0 deprecates scp
+  std::filesystem::path destPath(dest);
+  // Make remote directory with path
+  int rc;
+  std::string log;
+  std::tie(rc, log) = exec("mkdir -p '" + destPath.parent_path().string() + "'");
+  if(rc != 0 && rc != 1) {
+    throw(SshException("[SshPtr::ssh_write_contents_to_host_file]: Error making remote path: " + destPath.parent_path().string())); 
+  }
+
+  // Open sftp session
+  sftp_session sftp; 
+  sftp = sftp_new(session);
+  if (sftp == NULL) {
+    throw(SshException("[SshPtr::ssh_write_contents_to_host_file]: Error allocating SFTP session: " + dest + std::string(":") + ssh_get_error(session)));
+  }
+ 
+  rc = sftp_init(sftp);
+  if (rc != SSH_OK) {
+    throw(SshException("[SshPtr::ssh_write_contents_to_host_file]: Error initializing SFTP session: " + dest + std::string(":") + std::to_string(sftp_get_error(sftp))));
+    sftp_free(sftp);
+  }
+  
+  // Open sftp file to write
+  int access_type = O_WRONLY | O_CREAT | O_TRUNC;
+  sftp_file file;
+  file = sftp_open(sftp, destPath.string().c_str(), access_type, S_IRWXU);
+  if (file == NULL) {
+    throw(SshException("[SshPtr::ssh_write_contents_to_host_file]: Can't open file for writing: " + dest + std::string(":") + ssh_get_error(session)));
+  }
+ 
+  int nbytes = strlen(content.c_str());
+  rc = sftp_write(file, content.c_str(), nbytes);
+  if (rc != nbytes) {
+    sftp_close(file);
+    sftp_free(sftp);
+    throw(SshException("[SshPtr::ssh_write_contents_to_host_file]: Cannot write to remote file: " + dest + std::string(":") + ssh_get_error(session)));
+  }
+   
+  sftp_close(file);
+  sftp_free(sftp);
+#else
+  ssh_write_to_file(content, dest);
+#endif
 }

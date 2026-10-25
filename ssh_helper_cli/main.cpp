@@ -118,6 +118,14 @@ int main(int argn, char* argv[])
     }
     password = p;
   }
+  
+  // Check if .ssh/config exists. If not, create it.
+  {
+    std::string command = std::string("mkdir -p ~/.ssh");
+    system(command.c_str());
+    command = std::string("touch -a ~/.ssh/config");
+    system(command.c_str());
+  }
 
   int return_state = 0;
   // Uncomment next line to SSH debug output
